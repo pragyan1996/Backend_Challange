@@ -13,24 +13,21 @@ function sum(a) {
 var maxSumAfterPartitioning = function (arr, k) {
     let ans = [], n = arr.length;
     for (let i = 0; i < n; i++) ans.push(0);
-    for (let i = n - 1; i >= 0; i--) {
+    ans[n - 1] = arr[n - 1];
+    for (let i = n - 2; i >= 0; i--) {
         let maxP = Math.min(n - i, k);
         let maxi = -1;
         for (let j = 0; j < maxP; j++) {
             let t = max(arr, i, i + j);
-            console.log(t);
-            if (i == n - 1) {
-                maxi = Math.max(maxi, t * (j + 1));
-            }
-            else {
-                maxi = Math.max(maxi, t * (j + 1) + ans[i + j + 1]);
-            }
+            // console.log(t);
+            let nextAns = i + maxP < n ? ans[i + maxP] : 0;
+            maxi = Math.max(maxi, t * (j + 1) + nextAns);
             // console.log(maxi);
         }
         ans[i] = maxi;
     }
     console.log(ans);
-    return sum(ans);
+    return ans[0];
 };
 
 console.log(maxSumAfterPartitioning([1, 15, 7, 9, 2, 5, 10],3));
