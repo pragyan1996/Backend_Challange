@@ -2,16 +2,18 @@
   "name": "backend_challange",
   "version": "1.0.0",
   "description": "Fullstack for a shopping APP",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "server": "nodemon server.js"
   },
   "author": "Pragyan Tripathi",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.4.1",
     "dotenv-safe": "^8.2.0",
     "express": "^4.18.2",
+    "mongoose": "^8.1.1",
     "morgan": "^1.10.0",
     "nodemon": "^3.0.2"
   }
