@@ -1,9 +1,30 @@
-const registerAdmin = (req, res) => {
+const Admin = require('../../model/staffs/Admin')
+const bcrypt = require('bcryptjs');
+/**
+ * 
+ * @param {*} req: required 
+ * @param {*} res: required for response
+ * @description: Api for new admin registration
+ * @URL POST /admin/register
+ */
+const registerAdmin = async (req, res) => {
     console.log('here');
+    console.log(req.body);
+    const { name, email, password } = req.body;
     try {
-        res.status(201).json({
+        const check = await Admin.findOne({ email });
+        if (check) {
+            return res.json({ message: 'Admin already exists.' });
+        }
+        console.log(check);
+        const user = await Admin.create({
+            name,
+            email,
+            password
+        });
+        res.json({
             status: "success",
-            data: 'Admin has been registered'
+            data: user
         });
     } catch (error) {
         res.json({
@@ -13,12 +34,26 @@ const registerAdmin = (req, res) => {
     }
 };
 
-const adminLogin = (req, res) => {
+const verifyPassword = async function (enteredPass, dbpass) {
+    return await bcrypt.compare(enteredPass, dbpass);
+}
+
+const adminLogin = async (req, res) => {
+    const { email, password } = req.body;
     try {
-        res.status(201).json({
-            status: "success",
-            data: 'Admin has been loggedin'
-        });
+
+        let user = await Admin.findOne({ email });
+        console.log(user);
+        if (!user) {
+            return res.json({ message: "Invalid login credentials." });
+        }
+
+        if (user && await verifyPassword(password, user.password)) {
+            return res.json({data: user})
+        }
+        else {
+            return res.json({message: "Invalid login credentials."})
+        }
     } catch (error) {
         res.json({
             status: 'failed',

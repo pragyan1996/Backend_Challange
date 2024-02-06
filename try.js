@@ -1,16 +1,18 @@
-var firstUniqChar = function (s) {
-    let hm = {};
-    for (let ch of s) {
-        console.log(ch, hm);
-        if (hm[ch]) hm[ch] += 1;
-        else hm[ch] = 1;
+function sort(s) {
+    let freq = [];
+    for (let i = 0; i < 26; i++) freq.push(0);
+    for (let c of s) {
+        freq[c.charCodeAt() - 'a'.charCodeAt()]++;
     }
-    console.log(hm);
-    for (let ch in s) {
-        let chr = s[ch];
-        if (hm[chr] == 1) return ch;
+    let str = "";
+    for (let i = 0; i < 26; i++) {
+        let f = freq[i];
+        for (let j = 0; j < f; j++){
+            let ch = String.fromCharCode(i + 97);
+            str += ch
+        }
     }
-    return -1;
-};
+    return str;
+}
 
-console.log(firstUniqChar("loveleetcode"));
+sort("bat")
