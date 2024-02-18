@@ -11,8 +11,8 @@ const {
     registerAdmin,
     adminLogin,
     getAllAdmin,
-    getSingleAdmin,
     updateAdmin,
+    getAdminProfile,
 } = require("../../controller/Staff/adminController");
 const isLogin = require("../../middlewares/isLogin");
 
@@ -22,7 +22,7 @@ AdminRouter.post("/login", adminLogin);
 
 AdminRouter.get("/", getAllAdmin);
 
-AdminRouter.get("/:id",isLogin, getSingleAdmin);
+AdminRouter.get("/profile",isLogin, getAdminProfile);
 
 AdminRouter.put("/:id", updateAdmin);
 

@@ -5,7 +5,7 @@ const verifyToken = (token) => {
         if (err) {
             return false;
         } else {
-            return decoded;
+            return decoded.id;
         }
     });
 };

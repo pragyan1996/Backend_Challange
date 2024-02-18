@@ -2,7 +2,6 @@ const AsyncHandler = require("express-async-handler");
 const Admin = require("../../model/staffs/Admin");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../../utils/generate");
-const verifyToken = require("../../utils/verifyToken");
 
 /**
  *
@@ -73,12 +72,14 @@ const getAllAdmin = (req, res) => {
     }
 };
 
-const getSingleAdmin = (req, res) => {
-    console.log(req.userAuth);
+const getAdminProfile = AsyncHandler(async (req, res) => {
+    // console.log('-->',req.userAuth);
     try {
+        let userdata = req.userAuth;
+        let userData = await Admin.findById(userdata._id);
         res.status(201).json({
             status: "success",
-            data: "Single admin",
+            data: userData,
         });
     } catch (error) {
         res.json({
@@ -86,7 +87,7 @@ const getSingleAdmin = (req, res) => {
             error: error.message,
         });
     }
-};
+});
 
 const updateAdmin = (req, res) => {
     try {
@@ -204,7 +205,7 @@ module.exports = {
     registerAdmin,
     adminLogin,
     getAllAdmin,
-    getSingleAdmin,
+    getAdminProfile,
     updateAdmin,
     deleteAdmin,
     suspendTeacher,
