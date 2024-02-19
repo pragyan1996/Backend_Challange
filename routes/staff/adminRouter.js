@@ -15,16 +15,17 @@ const {
     getAdminProfile,
 } = require("../../controller/Staff/adminController");
 const isLogin = require("../../middlewares/isLogin");
+const isAdmin = require("../../middlewares/isAdmin");
 
 AdminRouter.post("/register", registerAdmin);
 
 AdminRouter.post("/login", adminLogin);
 
-AdminRouter.get("/", getAllAdmin);
+AdminRouter.get("/", isLogin, isAdmin, getAllAdmin);
 
-AdminRouter.get("/profile",isLogin, getAdminProfile);
+AdminRouter.get("/profile", isLogin, isAdmin, getAdminProfile);
 
-AdminRouter.put("/:id", updateAdmin);
+AdminRouter.put("/", isLogin, isAdmin, updateAdmin);
 
 AdminRouter.delete("/:id", deleteAdmin);
 

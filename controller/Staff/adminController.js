@@ -27,6 +27,7 @@ const registerAdmin = AsyncHandler(async (req, res) => {
     res.json({
         status: "success",
         data: user,
+        message: "Admin registered successfully.",
     });
 });
 
@@ -40,13 +41,17 @@ const adminLogin = async (req, res) => {
         let user = await Admin.findOne({ email });
         console.log(user);
         if (!user) {
+            console.log('here');
             return res.json({ message: "Invalid login credentials." });
         }
 
         if (user && (await verifyPassword(password, user.password))) {
             let token = generateToken(user);
 
-            return res.json({ data: user, token });
+            return res.json({
+                message: "Admin logged in successfully.",
+                token,
+            });
         } else {
             return res.json({ message: "Invalid login credentials." });
         }
@@ -58,19 +63,21 @@ const adminLogin = async (req, res) => {
     }
 };
 
-const getAllAdmin = (req, res) => {
+const getAllAdmin = AsyncHandler(async (req, res) => {
     try {
-        res.status(201).json({
+        let admins = await Admin.find();
+        return res.json({
             status: "success",
-            data: "Get all admins",
-        });
+            message: "Admins fetched successfully.",
+            data: admins
+        })
     } catch (error) {
         res.json({
             status: "failed",
             error: error.message,
         });
     }
-};
+})
 
 const getAdminProfile = AsyncHandler(async (req, res) => {
     // console.log('-->',req.userAuth);
@@ -89,12 +96,29 @@ const getAdminProfile = AsyncHandler(async (req, res) => {
     }
 });
 
-const updateAdmin = (req, res) => {
+const updateAdmin = async (req, res) => {
     try {
-        res.status(201).json({
-            status: "success",
-            data: "Update admin",
-        });
+        const { name, email, password } = req.body;
+        console.log(name, email, password);
+        const checkEmail = await Admin.findOne({ email });
+        console.log(checkEmail);
+        if (checkEmail) {
+            return res.status(201).json({
+                status: "failed",
+                message: "This email is already taken"
+            });
+        }
+        else {
+            let data = await Admin.findByIdAndUpdate(req.userAuth._id, {
+                name, email, password
+            });
+            return res.status(201).json({
+                status: "success",
+                data,
+                message: "Admin updated successfully."
+            });
+        }
+        
     } catch (error) {
         res.json({
             status: "failed",

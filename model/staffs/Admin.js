@@ -17,10 +17,40 @@ const adminSchema = new mongoose.Schema(
         role: {
             type: String,
             default: "admin",
-        }
+        },
+        academicTerms: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "AcademicTerm",
+            },
+        ],
+        academicYear: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "AcademicTerm",
+            },
+        ],
+        classLevel: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "ClassLevel",
+            },
+        ],
+        teachers: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Teacher",
+            },
+        ],
+        students: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Students",
+            },
+        ],
     },
     {
-        timestamps: true
+        timestamps: true,
     }
 );
 
