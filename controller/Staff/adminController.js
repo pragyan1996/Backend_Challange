@@ -18,11 +18,14 @@ const registerAdmin = AsyncHandler(async (req, res) => {
     if (check) {
         return res.json({ message: "Admin already exists." });
     }
-    console.log(check);
+
+    const salt = await bcrypt.genSalt(10);
+    let encryptedPassword = await bcrypt.hash(password, salt);
+
     const user = await Admin.create({
         name,
         email,
-        password,
+        password: encryptedPassword
     });
     res.json({
         status: "success",
@@ -77,8 +80,7 @@ const getAllAdmin = AsyncHandler(async (req, res) => {
             error: error.message,
         });
     }
-})
-
+});
 const getAdminProfile = AsyncHandler(async (req, res) => {
     // console.log('-->',req.userAuth);
     try {
@@ -109,8 +111,10 @@ const updateAdmin = async (req, res) => {
             });
         }
         else {
+            const salt = await bcrypt.genSalt(10);
+            let encryptedPassword = await bcrypt.hash(password, salt);
             let data = await Admin.findByIdAndUpdate(req.userAuth._id, {
-                name, email, password
+                name, email, password: encryptedPassword
             });
             return res.status(201).json({
                 status: "success",
